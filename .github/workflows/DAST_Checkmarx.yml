@@ -1,0 +1,27 @@
+name: Checkmarx DAST
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Checkmarx DAST Github Action
+        uses: Checkmarx/dast-github-action@v1.0.3
+        env:
+          CX_APIKEY: ${{ secrets.CX_ONE_API_KEY }}
+        with:
+          command: "web"
+          config: 'web.yaml'
+          base_url: https://eu.ast.checkmarx.net/
+          environment_id: "8ac9c726-7353-40c3-9515-3b7d86dc494f"
+          verbose: true
+
+      - name: Upload Logs
+        uses: actions/upload-artifact@v3
+        with:
+          name: report
+          path: ./output
